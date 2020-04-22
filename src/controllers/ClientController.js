@@ -53,7 +53,7 @@ module.exports = {
       }
     });
 
-    return response.json();
+    return response.json({ sucess: 'Usuario apagado' });
   },
 
   async update(request, response) {

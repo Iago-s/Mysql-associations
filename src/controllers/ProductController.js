@@ -35,5 +35,55 @@ module.exports = {
     });
     
     return response.json(product);
+  },
+
+  async delete(request, response) {
+    const { supermarket_id } = request.params;
+    const { id } = request.params;
+
+    const supermarketExists = await Supermarket.findByPk(supermarket_id);
+    const productExists = await Product.findByPk(id);
+
+    if(!supermarketExists || !productExists) {
+      return response.status(400).json({ error: 'Este supermercado ou produto não existe' });
+    }
+
+    await Product.destroy({
+      where: {
+        id,
+        supermarket_id
+      }
+    }).then(() => {
+      return response.json({ sucess: 'Produto deletado' });
+    }).catch(err => {
+      return response.json({ error: 'Este produto não pode ser deletado, pois este supermercado não tem este produto em lista' });
+    });
+  },
+
+  async update(request, response) {
+    const { supermarket_id } = request.params;
+    const { id } = request.params;
+    const { type, name, price, amount } = request.body;
+
+    const supermarketExists = await Supermarket.findByPk(supermarket_id);
+    const productExists = await Product.findByPk(id);
+
+    if(!supermarketExists || !productExists) {
+      return response.status(400).json({ error: 'Este supermercado ou produto não existe' });
+    }
+
+    const product = await Product.update({
+      type, 
+      name, 
+      price, 
+      amount,
+      supermarket_id
+    }, {
+      where: { id, supermarket_id }
+    }).then(result => {
+      return response.json({ sucess: 'Produto atualizado' });  
+    }).catch(err => {
+      return response.json({ error: 'Error ao atualizar produto' });
+    }); 
   }
 }
