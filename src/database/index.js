@@ -5,6 +5,7 @@ const Client = require('../models/Client');
 const Imgclient = require('../models/Imgclient');
 
 const Supermarket = require('../models/Supermarket');
+const ImgSupermarket = require('../models/Imgsupermarket');
 const Product = require('../models/Product');
 
 const connection = new Sequelize(dbConfig);
@@ -13,9 +14,11 @@ Client.init(connection);
 Imgclient.init(connection);
 
 Supermarket.init(connection);
+ImgSupermarket.init(connection);
 Product.init(connection);
 
 Supermarket.associate(connection.models);
+ImgSupermarket.associate(connection.models);
 Product.associate(connection.models);
 
 Client.associate(connection.models);

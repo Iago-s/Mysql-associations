@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { promisify } = require('util');
 
-class Imgclient extends Model {
+class Imgsupermarket extends Model {
   static init(connection) {
     super.init({
       name: DataTypes.STRING,
@@ -24,8 +24,8 @@ class Imgclient extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Client, { foreignKey: 'client_id', as: 'client' });
+    this.belongsTo(models.Supermarket, { foreignKey: 'imgsupermarket_id', as: 'supermarket' });
   }
 }
 
-module.exports = Imgclient;
+module.exports = Imgsupermarket;

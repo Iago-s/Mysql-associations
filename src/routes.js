@@ -15,8 +15,9 @@ routes.post('/clients', multer(multerConfig).single('imgclient'), ClientControll
 routes.delete('/clients/:id/delete', ClientController.delete);
 routes.post('/clients/:id/update', ClientController.update);
 
-routes.get('/supermarkets', SupermarketController.index);
-routes.post('/supermarkets', SupermarketController.store);
+routes.get('/supermarkets/:supermarket_id', SupermarketController.index);
+routes.get('/supermarkets', SupermarketController.indexall);
+routes.post('/supermarkets', multer(multerConfig).single('imgsupermarket'), SupermarketController.store);
 routes.delete('/supermarkets/:id/delete', SupermarketController.delete);
 routes.post('/supermarkets/:id/update', SupermarketController.update);
 

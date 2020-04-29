@@ -2,24 +2,24 @@ const Client = require('../models/Client');
 const ImgClient = require('../models/Imgclient');
 
 module.exports = {
-  async index(request, response) {
-    const { client_id } = request.params;
-
-    const imgclients = await Client.findByPk(client_id, {
-      include: { association: 'imgclient' }
-    });
-
-    if(!imgclients) {
-      return response.status(400).json({ error: 'Cliente não existe' });
-    }
-
-    return response.json(imgclients);
-  },
-
   async indexAll(request, response) {
     const clients = await Client.findAll();
 
     return response.json(clients);
+  },
+
+  async index(request, response) {
+    const { client_id } = request.params;
+
+    const imgClients = await Client.findByPk(client_id, {
+      include: { association: 'imgclient' }
+    });
+
+    if(!imgClients) {
+      return response.status(400).json({ error: 'Cliente não existe' });
+    }
+
+    return response.json(imgClients);
   },
 
   async store(request, response) {
@@ -50,7 +50,6 @@ module.exports = {
       password
     });
 
-    console.log(request.file);
     if(request.file === undefined) {
       return response.json({ client });
     }
@@ -87,7 +86,7 @@ module.exports = {
       }
     });
 
-    return response.json({ sucess: 'Usuario apagado' });
+    return response.json({ sucess: 'Cliente apagado' });
   },
 
   async update(request, response) {
