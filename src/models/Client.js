@@ -18,6 +18,10 @@ class Client extends Model {
       sequelize: connection
     });
   }
+
+  static associate(models) {
+    this.hasOne(models.Imgclient, { foreignKey: 'client_id', as: 'imgclient' });
+  }
 }
 
 module.exports = Client;

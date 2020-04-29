@@ -1,13 +1,17 @@
 const express = require('express');
 
+const multer = require('multer');
+const multerConfig = require('./config/multer');
+
 const ClientController = require('./controllers/ClientController');
 const SupermarketController = require('./controllers/SupermarketController');
 const ProductController = require('./controllers/ProductController');
 
 const routes = express.Router();
 
-routes.get('/clients', ClientController.index);
-routes.post('/clients', ClientController.store);
+routes.get('/clients/:client_id', ClientController.index);
+routes.get('/clients', ClientController.indexAll);
+routes.post('/clients', multer(multerConfig).single('imgclient'), ClientController.store);
 routes.delete('/clients/:id/delete', ClientController.delete);
 routes.post('/clients/:id/update', ClientController.update);
 

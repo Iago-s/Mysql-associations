@@ -1,7 +1,22 @@
 const Client = require('../models/Client');
+const ImgClient = require('../models/Imgclient');
 
 module.exports = {
   async index(request, response) {
+    const { client_id } = request.params;
+
+    const imgclients = await Client.findByPk(client_id, {
+      include: { association: 'imgclient' }
+    });
+
+    if(!imgclients) {
+      return response.status(400).json({ error: 'Cliente não existe' });
+    }
+
+    return response.json(imgclients);
+  },
+
+  async indexAll(request, response) {
     const clients = await Client.findAll();
 
     return response.json(clients);
@@ -35,7 +50,20 @@ module.exports = {
       password
     });
 
-    return response.json(client);
+    console.log(request.file);
+    if(request.file === undefined) {
+      return response.json({ client });
+    }
+    
+    const imgClient = await ImgClient.create({
+      name: request.file.originalname,
+      size: request.file.size,
+      key: request.file.key,
+      url: '',
+      client_id: client.dataValues.id 
+    });
+     
+    return response.json({ client, imgClient });
   },
 
   async delete(request, response) {
@@ -50,6 +78,12 @@ module.exports = {
     await Client.destroy({
       where: {
         id
+      }
+    });
+
+    await ImgClient.destroy({
+      where: {
+        client_id: id
       }
     });
 
