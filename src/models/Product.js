@@ -14,6 +14,7 @@ class Product extends Model {
 
   static associate(models) {
     this.belongsTo(models.Supermarket, { foreignKey: 'supermarket_id', as: 'supermarket' });
+    this.hasOne(models.ImgProduct, { foreignKey: 'imgproduct_id', as: 'imgproduct' });
   }
 }
 

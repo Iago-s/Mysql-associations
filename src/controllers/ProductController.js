@@ -1,19 +1,20 @@
 const Supermarket = require('../models/Supermarket');
 const Product = require('../models/Product');
+const ImgProduct = require('../models/Imgproduct');
 
 module.exports = {
   async index(request, response) {
     const { supermarket_id } = request.params;
 
     const supermarket = await Supermarket.findByPk(supermarket_id, {
-      include: { association: 'products'}
+      include: { association: 'products' }
     });
 
     if(!supermarket) {
       return response.status(400).json({ error: 'Supermercado não existe' });
     }
 
-    response.json(supermarket);
+    return response.json({ supermarket });
   },
 
   async store(request, response) {
@@ -31,15 +32,24 @@ module.exports = {
       name, 
       price, 
       amount,
-      supermarket_id,
+      supermarket_id: parseInt(supermarket_id),
+    });
+
+    const productImg = await ImgProduct.create({
+      name: request.file.originalname,
+      size: request.file.size,
+      key: request.file.key,
+      url: '',
+      id: product.dataValues.id,
+      imgproduct_id: product.dataValues.id,
     });
     
-    return response.json(product);
+    return response.json({ product, productImg });
   },
 
   async delete(request, response) {
-    const { supermarket_id } = request.params;
-    const { id } = request.params;
+    const { supermarket_id } = request.params; 
+    const { id } = request.params; 
 
     const supermarketExists = await Supermarket.findByPk(supermarket_id);
     const productExists = await Product.findByPk(id);
@@ -57,6 +67,13 @@ module.exports = {
       return response.json({ sucess: 'Produto deletado' });
     }).catch(err => {
       return response.json({ error: 'Este produto não pode ser deletado, pois este supermercado não tem este produto em lista' });
+    });
+
+    await ImgProduct.destroy({
+      where: {
+        imgproduct_id: id,
+        id: supermarket_id
+      }
     });
   },
 
@@ -80,7 +97,7 @@ module.exports = {
       supermarket_id
     }, {
       where: { id, supermarket_id }
-    }).then(result => {
+    }).then(() => {
       return response.json({ sucess: 'Produto atualizado' });  
     }).catch(err => {
       return response.json({ error: 'Error ao atualizar produto' });

@@ -22,7 +22,7 @@ routes.delete('/supermarkets/:id/delete', SupermarketController.delete);
 routes.post('/supermarkets/:id/update', SupermarketController.update);
 
 routes.get('/supermarkets/:supermarket_id/products', ProductController.index);
-routes.post('/supermarkets/:supermarket_id/products', ProductController.store);
+routes.post('/supermarkets/:supermarket_id/products', multer(multerConfig).single('imgproduct'), ProductController.store);
 routes.delete('/supermarkets/:supermarket_id/products/:id/delete', ProductController.delete);
 routes.post('/supermarkets/:supermarket_id/products/:id/update', ProductController.update);
 
